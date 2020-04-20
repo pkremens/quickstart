@@ -16,18 +16,6 @@
  */
 package org.jboss.as.quickstarts.jaxrsclient.test;
 
-import java.net.URL;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.InvocationCallback;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -40,6 +28,18 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.InvocationCallback;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -59,6 +59,7 @@ public class ContactsRestClientIT {
         WebArchive war = ShrinkWrap.create(WebArchive.class, "managed-executor-service.war")
                 .addPackage(JaxRsActivator.class.getPackage())
                 .addPackage(Contact.class.getPackage())
+                .addAsResource("META-INF/microprofile-config.properties")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return war;
     }
