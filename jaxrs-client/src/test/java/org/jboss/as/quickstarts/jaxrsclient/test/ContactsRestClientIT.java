@@ -69,6 +69,18 @@ public class ContactsRestClientIT {
                 .toString();
     }
 
+    private String getServletUrl() {
+        return new StringBuilder(deploymentUrl.toString())
+                .append("/test-config")
+                .toString();
+    }
+
+    @Test
+    public void servletTest() {
+        Response response = ClientBuilder.newClient().target(getServletUrl()).request().get();
+        log.info("Response from servlet: " + response.readEntity(String.class));
+    }
+
 
     // This test shows basic operations
     @Test
