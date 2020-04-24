@@ -16,17 +16,20 @@
  */
 package org.jboss.as.quickstarts.rshelloworld;
 
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import java.util.stream.Collectors;
 
 /**
  * A simple REST service which is able to say hello to someone using HelloService Please take a look at the web.xml where JAX-RS
  * is enabled
  *
  * @author gbrey@redhat.com
- *
  */
 
 @Path("/")
@@ -34,18 +37,33 @@ public class HelloWorld {
     @Inject
     HelloService helloService;
 
+    @Inject
+    @ConfigProperty(name = "name", defaultValue = "pkremens")
+    String name;
+
+//    String name = "default";
+
     @GET
     @Path("/json")
-    @Produces({ "application/json" })
+    @Produces({"application/json"})
     public String getHelloWorldJSON() {
-        return "{\"result\":\"" + helloService.createHelloMessage("World") + "\"}";
+        printConfigProviders();
+        return "{\"result\":\"" + helloService.createHelloMessage(name) + "\"}";
     }
 
     @GET
     @Path("/xml")
-    @Produces({ "application/xml" })
+    @Produces({"application/xml"})
     public String getHelloWorldXML() {
-        return "<xml><result>" + helloService.createHelloMessage("World") + "</result></xml>";
+        return "<xml><result>" + helloService.createHelloMessage(name) + "</result></xml>";
     }
 
+    private void printConfigProviders() {
+        ConfigProvider.getConfig().getConfigSources().forEach(configSource -> {
+            System.out.println("=================================");
+            System.out.println(configSource.getName());
+            System.out.println(configSource.getOrdinal());
+            System.out.println(configSource.getPropertyNames().stream().collect(Collectors.joining(", ")));
+        });
+    }
 }
